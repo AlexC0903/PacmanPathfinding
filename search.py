@@ -90,18 +90,18 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     stack = util.Stack()
     visited = []
-    source = (problem.getStartState(), [], 0)
-    stack.push(source)
+    startNode = (problem.getStartState(), [], 0)
+    stack.push(startNode)
     while not stack.isEmpty():
-        state, path, cost = stack.pop()
-        if state in visited:
+        curNode, path, cost = stack.pop()
+        if curNode in visited:
             continue
-        visited.append(state)
-        if problem.isGoalState(state):
+        visited.append(curNode)
+        if problem.isGoalState(curNode):
             return path
-        for s, p, c in problem.getSuccessors(state):
-            if s not in visited:
-                stack.push((s, path + [p], cost + c))
+        for n, p, c in problem.getSuccessors(curNode):
+            if n not in visited:
+                stack.push((n, path + [p], cost + c))
 
 
 
@@ -112,23 +112,38 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     queue = util.Queue()
     visited = []
-    source = (problem.getStartState(), [], 0)
-    queue.push(source)
+    startNode = (problem.getStartState(), [], 0)
+    queue.push(startNode)
     while not queue.isEmpty():
-        state, path, cost = queue.pop()
-        if state in visited:
+        curNode, path, cost = queue.pop()
+        if curNode in visited:
             continue
-        visited.append(state)
-        if problem.isGoalState(state):
+        visited.append(curNode)
+        if problem.isGoalState(curNode):
             return path
-        for s, p, c, in problem.getSuccessors(state):
-            if s not in visited:
-                queue.push((s, path + [p], cost + c))
+        for n, p, c, in problem.getSuccessors(curNode):
+            if n not in visited:
+                queue.push((n, path + [p], cost + c))
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    queue = util.PriorityQueue()
+    visited = []
+    startNode = (problem.getStartState(), [], 0)
+    queue.push(startNode, 1)
+    while not queue.isEmpty():
+        curNode, path, cost = queue.pop()
+        if curNode in visited:
+            continue
+        visited.append(curNode)
+        if problem.isGoalState(curNode):
+            return path
+        for n, p, c, in problem.getSuccessors(curNode):
+            if n not in visited:
+                queue.push((n, path + [p], cost + c), 1)
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
