@@ -135,15 +135,9 @@ def uniformCostSearch(problem):
             return path
         
         for n, p, c, in problem.getSuccessors(curNode):
+            # The items in the priority queue are ordered by their cost(start to node)
             cost = problem.getCostOfActions(path + [p])
-            print(cost)
             if n not in visited:
-                """
-                To pop the node with the least cost off the queue, 
-                we push the node with the priority level of the
-                calculated total cost(from start to node), so if a 
-                node has less cost, it will be popped first.
-                """
                 queue.push((n, path + [p], cost + c), cost)
 
     util.raiseNotDefined()
@@ -158,7 +152,28 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    queue = util.PriorityQueue()
+    visited = []
+    startNode = (problem.getStartState(), [], 0)
+    queue.push(startNode, problem)
+    while not queue.isEmpty():
+        curNode, path, cost = queue.pop()
+        if curNode in visited:
+            continue
+        visited.append(curNode)
+        if problem.isGoalState(curNode):
+            return path
+        
+        for n, p, c, in problem.getSuccessors(curNode):
+            cost = problem.getCostOfActions(path + [p])
+            # Heusteric Cost - Cost from node to goal. The items in the queue are ordered by cost + heuristic(node to goal)
+            hCost = cost + heuristic(n, problem)
+            if n not in visited:
+                queue.push((n, path + [p], cost + c), heuristic)
+
     util.raiseNotDefined()
+
+
 
 
 # Abbreviations
