@@ -8,6 +8,6 @@ Dependencies:
 pygame
 ```
 
-Project is inebted to this video by TechWithTim:
+Project is indebted to this video by TechWithTim:
 https://www.youtube.com/watch?v=JtiK0DOeI4A
 
