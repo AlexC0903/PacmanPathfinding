@@ -3,9 +3,10 @@
 Simple pathfinding visualizer build with python, for fun and for school. 
 In the future, I might move the graphics of this project over to PyQt5 or to WPF(C#)
 
-Dependencies:
+## Dependencies:
+Python 3.7+ and Pygame is required.
 ```
-pygame
+pip install pygame
 ```
 
 Project is indebted to this video by TechWithTim:
