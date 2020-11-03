@@ -2,8 +2,11 @@ import pygame
 
 import math
 from queue import PriorityQueue
+from queue import Queue
+
 
 WIDTH = 720
+pygame.init()
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Pathfinding Visualizer")
 
@@ -71,6 +74,7 @@ class Node:
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
+
     def update_neighbours(self, grid):
         self.neighbours = []
         if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():  # DOWN
@@ -115,6 +119,10 @@ def algorithm(draw, grid, start, end):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    return False
+
 
         current = open_set.get()[2]
         open_set_hash.remove(current)
@@ -164,6 +172,13 @@ def draw_grid(win, rows, width):
          for j in range(rows):
             pygame.draw.line(win, GREY, (j*gap, 0), (j*gap, width))
 
+def draw_text(win, content):
+    font = pygame.font.Font(None, 36)
+    text = font.render("Hello There", 1, (10, 10, 10))
+    textpos = text.get_rect()
+    textpos.centerx = win.get_rect().centerx-285
+    win.blit(text, textpos)
+
 def draw(win, grid, rows, width):
     win.fill(WHITE)
 
@@ -171,6 +186,7 @@ def draw(win, grid, rows, width):
         for node in row:
             node.draw(win)
 
+    draw_text(win)
     draw_grid(win, rows, width)
     pygame.display.update()
 
