@@ -96,13 +96,12 @@ def h(p1, p2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 def reconstruct_path(came_from, current, draw):
-    print(came_from)
     while current in came_from:
         current = came_from[current]
         current.make_path()
         draw()
 
-def dfs(draw, grid, start, end):
+def dfs(draw, start, end):
     count = 0
     open_set = queue.LifoQueue()
     open_set.put(start)
@@ -120,9 +119,6 @@ def dfs(draw, grid, start, end):
 
         current = open_set.get()
 
-
-
-
         if current == end:
             reconstruct_path(came_from, end, draw)
             end.make_end()
@@ -130,8 +126,8 @@ def dfs(draw, grid, start, end):
             return True, count
 
         for n in current.neighbours:
-            came_from[n] = current
             if n not in open_set_hash:
+                came_from[n] = current
                 open_set.put(n)
                 open_set_hash.add(n)
                 count += 1
@@ -303,19 +299,23 @@ def main(win, width):
                         for node in row:
                             node.update_neighbours(grid)
 
-                    astar(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    Success, Count = astar(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    print(Success, Count)
+
                 elif event.key == pygame.K_d and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
 
-                    dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    Success, Count = dfs(lambda: draw(win, grid, ROWS, width), start, end)
+                    print(Success, Count)
+
                 elif event.key == pygame.K_b and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
 
-                    # bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                  # Success, Count = bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
                 if event.key == pygame.K_c:
                     start = None
