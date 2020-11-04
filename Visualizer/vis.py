@@ -132,10 +132,6 @@ def dfs(draw, start, end):
                 open_set_hash.add(n)
                 count += 1
 
-
-
-
-
         draw()
 
         if current != start:
