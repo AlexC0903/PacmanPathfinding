@@ -1,8 +1,6 @@
 import pygame
-
 import math
-from queue import PriorityQueue
-from queue import Queue
+import queue
 
 
 WIDTH = 720
@@ -89,6 +87,7 @@ class Node:
         if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():  # LEFT
             self.neighbours.append(grid[self.row][self.col - 1])
 
+
     def __lt__(self, other):
         return False
 
@@ -98,14 +97,62 @@ def h(p1, p2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 def reconstruct_path(came_from, current, draw):
+    print(came_from)
     while current in came_from:
         current = came_from[current]
         current.make_path()
         draw()
 
-def algorithm(draw, grid, start, end):
+def dfs(draw, grid, start, end):
+    open_set = queue.LifoQueue()
+    open_set.put(start)
+    came_from = {}
+    g = {node: float("inf") for row in grid for node in row}
+    g[start] = 0
+
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    return False
+
+
+        current = open_set.get()
+        open_set_hash.remove(current)
+
+
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True, g
+
+        for n in current.neighbours:
+            g[n] = g[current] + 1
+            came_from[n] = current
+            if n not in open_set_hash:
+                open_set.put(n)
+                open_set_hash.add(n)
+
+
+
+
+
+        draw()
+
+        if current != start:
+             current.make_closed()
+
+    return False
+
+def astar(draw, grid, start, end):
     count = 0
-    open_set = PriorityQueue()
+    open_set = queue.PriorityQueue()
     open_set.put(item=(0, count, start))
     came_from = {}
     g = {node: float("inf") for row in grid for node in row}
@@ -131,7 +178,7 @@ def algorithm(draw, grid, start, end):
             reconstruct_path(came_from, end, draw)
             end.make_end()
             start.make_start()
-            return True
+            return True, g
 
         for neighbour in current.neighbours:
             temp_g = g[current] + 1
@@ -161,6 +208,8 @@ def make_grid(rows, width):
         grid.append([])
         for j in range(rows):
             node = Node(i, j, gap, rows)
+            if i == 0 or j == 0 or i == 59 or j == 59:
+                node.make_barrier()
             grid[i].append(node)
 
     return grid
@@ -172,12 +221,21 @@ def draw_grid(win, rows, width):
          for j in range(rows):
             pygame.draw.line(win, GREY, (j*gap, 0), (j*gap, width))
 
-def draw_text(win, content):
-    font = pygame.font.Font(None, 36)
-    text = font.render("Hello There", 1, (10, 10, 10))
-    textpos = text.get_rect()
-    textpos.centerx = win.get_rect().centerx-285
-    win.blit(text, textpos)
+def draw_text(win):
+    font = pygame.font.Font(None, 20)
+    text1 = font.render("DepthFirstSearch - D", 1, (255, 255, 255))
+    text2 = font.render("BreadthFirstSearch - B", 1, (255, 255, 255))
+    text3 = font.render("AStar - A", 1, (255, 255, 255))
+    textpos1 = text1.get_rect()
+    textpos2 = text2.get_rect()
+    textpos3 = text3.get_rect()
+    textpos1.centerx = win.get_rect().centerx-290
+    textpos2.centerx = win.get_rect().centerx-125
+    textpos3.centerx = win.get_rect().centerx+10
+    win.blit(text1, textpos1)
+    win.blit(text2, textpos2)
+    win.blit(text3, textpos3)
+
 
 def draw(win, grid, rows, width):
     win.fill(WHITE)
@@ -186,8 +244,8 @@ def draw(win, grid, rows, width):
         for node in row:
             node.draw(win)
 
-    draw_text(win)
     draw_grid(win, rows, width)
+    draw_text(win)
     pygame.display.update()
 
 def get_clicked_pos(pos, rows, width):
@@ -221,11 +279,11 @@ def main(win, width):
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
                 node = grid[row][col]
-                if not start and node != end:
+                if not start and node != end and node.is_barrier() == False:
                     start = node
                     start.make_start()
 
-                elif not end and node != start:
+                elif not end and node != start and node.is_barrier() == False:
                     end = node
                     end.make_end()
 
@@ -243,12 +301,24 @@ def main(win, width):
                     end = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and start and end:
+                if event.key == pygame.K_a and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
 
-                    algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    astar(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                elif event.key == pygame.K_d and start and end:
+                    for row in grid:
+                        for node in row:
+                            node.update_neighbours(grid)
+
+                    dfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                elif event.key == pygame.K_b and start and end:
+                    for row in grid:
+                        for node in row:
+                            node.update_neighbours(grid)
+
+                    # bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
 
                 if event.key == pygame.K_c:
                     start = None
