@@ -1,5 +1,4 @@
 import pygame
-import math
 import queue
 
 
@@ -104,12 +103,10 @@ def reconstruct_path(came_from, current, draw):
         draw()
 
 def dfs(draw, grid, start, end):
+    count = 0
     open_set = queue.LifoQueue()
     open_set.put(start)
     came_from = {}
-    g = {node: float("inf") for row in grid for node in row}
-    g[start] = 0
-
     open_set_hash = {start}
 
     while not open_set.empty():
@@ -122,7 +119,7 @@ def dfs(draw, grid, start, end):
 
 
         current = open_set.get()
-        open_set_hash.remove(current)
+
 
 
 
@@ -130,14 +127,14 @@ def dfs(draw, grid, start, end):
             reconstruct_path(came_from, end, draw)
             end.make_end()
             start.make_start()
-            return True, g
+            return True, count
 
         for n in current.neighbours:
-            g[n] = g[current] + 1
             came_from[n] = current
             if n not in open_set_hash:
                 open_set.put(n)
                 open_set_hash.add(n)
+                count += 1
 
 
 
@@ -178,7 +175,7 @@ def astar(draw, grid, start, end):
             reconstruct_path(came_from, end, draw)
             end.make_end()
             start.make_start()
-            return True, g
+            return True, count
 
         for neighbour in current.neighbours:
             temp_g = g[current] + 1

@@ -70,13 +70,29 @@
       <option name="presentableId" value="Default" />
       <updated>1604327421997</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added outer barrier and algorithm hotkey text. Error with implementing new algorithms.">
+      <created>1604501643629</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1604501643629</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added outer barrier and algorithm hotkey text. Error with implementing new algorithms." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added outer barrier and algorithm hotkey text. Error with implementing new algorithms." />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604327977006">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="414" y="194" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1604327977006" />
+    <state x="343" y="52" key="CommitChangelistDialog2" timestamp="1604501643255">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="343" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1604501643255" />
     <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1604327846244">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
