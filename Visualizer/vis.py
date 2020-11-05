@@ -114,7 +114,7 @@ def dfs(draw, start, end):
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
-                    return False
+                    return False, 0
 
 
         current = open_set.get()
@@ -137,7 +137,45 @@ def dfs(draw, start, end):
         if current != start:
              current.make_closed()
 
-    return False
+    return False, 0
+
+def bfs(draw, start, end):
+    count = 0
+    open_set = queue.Queue()
+    open_set.put(start)
+    came_from = {}
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    return False, 0
+
+
+        current = open_set.get()
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True, count
+
+        for n in current.neighbours:
+            if n not in open_set_hash:
+                came_from[n] = current
+                open_set.put(n)
+                open_set_hash.add(n)
+                count += 1
+
+        draw()
+
+        if current != start:
+             current.make_closed()
+
+    return False, 0
 
 def astar(draw, grid, start, end):
     count = 0
@@ -157,11 +195,10 @@ def astar(draw, grid, start, end):
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
-                    return False
+                    return False, 0
 
 
         current = open_set.get()[2]
-        open_set_hash.remove(current)
 
         if current == end:
             reconstruct_path(came_from, end, draw)
@@ -180,14 +217,58 @@ def astar(draw, grid, start, end):
                     count += 1
                     open_set.put((f[neighbour], count, neighbour))
                     open_set_hash.add(neighbour)
-                    neighbour.make_open()
+                    if neighbour != end:
+                        neighbour.make_open()
 
         draw()
 
         if current != start:
              current.make_closed()
 
-    return False
+    return False, 0
+
+def ucs(draw, grid, start, end):
+    count = 0
+    open_set = queue.PriorityQueue()
+    open_set.put((0, start))
+    came_from = {}
+    c = {node: float("inf") for row in grid for node in row}
+    c[start] = 0
+
+    open_set_hash = {start}
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    return False, 0
+
+
+        current = open_set.get()[1]
+
+        if current == end:
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
+            return True, count
+
+        for n in current.neighbours:
+            if n not in open_set_hash:
+                came_from[n] = current
+                c[n] = c[current] + 1
+                open_set.put((c[n], n))
+                open_set_hash.add(n)
+                count += 1
+
+
+        draw()
+
+        if current != start:
+             current.make_closed()
+
+    return False, 0
 
 def make_grid(rows, width):
     grid = []
@@ -210,23 +291,17 @@ def draw_grid(win, rows, width):
          for j in range(rows):
             pygame.draw.line(win, GREY, (j*gap, 0), (j*gap, width))
 
-def draw_text(win):
-    font = pygame.font.Font(None, 20)
-    text1 = font.render("DepthFirstSearch - D", 1, (255, 255, 255))
-    text2 = font.render("BreadthFirstSearch - B", 1, (255, 255, 255))
-    text3 = font.render("AStar - A", 1, (255, 255, 255))
-    textpos1 = text1.get_rect()
-    textpos2 = text2.get_rect()
-    textpos3 = text3.get_rect()
-    textpos1.centerx = win.get_rect().centerx-290
-    textpos2.centerx = win.get_rect().centerx-125
-    textpos3.centerx = win.get_rect().centerx+10
-    win.blit(text1, textpos1)
-    win.blit(text2, textpos2)
-    win.blit(text3, textpos3)
+def draw_text(win, text, fontSize, colour, offsetX, offsetY):
+    font = pygame.font.Font(None, fontSize)
+    text = font.render(text, 1, colour)
+    textpos = text.get_rect()
+    textpos.centerx = win.get_rect().centerx+offsetX
+    textpos.centery = win.get_rect().centery+offsetY
+
+    win.blit(text, textpos)
 
 
-def draw(win, grid, rows, width):
+def draw(win, grid, rows, width, score):
     win.fill(WHITE)
 
     for row in grid:
@@ -234,7 +309,11 @@ def draw(win, grid, rows, width):
             node.draw(win)
 
     draw_grid(win, rows, width)
-    draw_text(win)
+    draw_text(win, "Depth First Search - D", 20, (255, 255, 255), -290, -353)
+    draw_text(win, "Breadth First Search - B", 20, (255, 255, 255), -80, -353)
+    draw_text(win, "AStar Search - A", 20, (255, 255, 255), 100, -353)
+    draw_text(win, "Uniform Cost Search - U", 20, (255, 255, 255), 280, -353)
+    draw_text(win, score, 20, (255, 255, 255), 0, 355)
     pygame.display.update()
 
 def get_clicked_pos(pos, rows, width):
@@ -255,8 +334,11 @@ def main(win, width):
 
     run = True
     started = False
+    score = "Success: False  Count: 0"
+
+
     while run:
-        draw(win, grid, ROWS, width)
+        draw(win, grid, ROWS, width, score)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -295,28 +377,38 @@ def main(win, width):
                         for node in row:
                             node.update_neighbours(grid)
 
-                    Success, Count = astar(lambda: draw(win, grid, ROWS, width), grid, start, end)
-                    print(Success, Count)
+                    Success, Count = astar(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 elif event.key == pygame.K_d and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
 
-                    Success, Count = dfs(lambda: draw(win, grid, ROWS, width), start, end)
-                    print(Success, Count)
+                    Success, Count = dfs(lambda: draw(win, grid, ROWS, width, score), start, end)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 elif event.key == pygame.K_b and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
 
-                  # Success, Count = bfs(lambda: draw(win, grid, ROWS, width), grid, start, end)
+                    Success, Count = bfs(lambda: draw(win, grid, ROWS, width, score), start, end)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
+
+                elif event.key == pygame.K_u and start and end:
+                    for row in grid:
+                        for node in row:
+                            node.update_neighbours(grid)
+
+                    Success, Count = ucs(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 if event.key == pygame.K_c:
                     start = None
                     end = None
                     grid = make_grid(ROWS, width)
+
 
 
     pygame.quit()
