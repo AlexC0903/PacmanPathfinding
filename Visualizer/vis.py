@@ -334,7 +334,7 @@ def main(win, width):
 
     run = True
     started = False
-    score = "Success: None Count: None"
+    score = "Success: False  Count: 0"
 
 
     while run:
@@ -378,7 +378,7 @@ def main(win, width):
                             node.update_neighbours(grid)
 
                     Success, Count = astar(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
-                    score = "Success: " + str(Success), " Count:" + str(Count)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 elif event.key == pygame.K_d and start and end:
                     for row in grid:
@@ -386,7 +386,7 @@ def main(win, width):
                             node.update_neighbours(grid)
 
                     Success, Count = dfs(lambda: draw(win, grid, ROWS, width, score), start, end)
-                    score = str(Count)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 elif event.key == pygame.K_b and start and end:
                     for row in grid:
@@ -394,7 +394,7 @@ def main(win, width):
                             node.update_neighbours(grid)
 
                     Success, Count = bfs(lambda: draw(win, grid, ROWS, width, score), start, end)
-                    score = str(Count)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 elif event.key == pygame.K_u and start and end:
                     for row in grid:
@@ -402,7 +402,7 @@ def main(win, width):
                             node.update_neighbours(grid)
 
                     Success, Count = ucs(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
-                    score = str(Count)
+                    score = "Success: " + str(Success) + "  Count:" + str(Count)
 
                 if event.key == pygame.K_c:
                     start = None
