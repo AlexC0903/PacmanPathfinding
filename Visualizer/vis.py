@@ -343,9 +343,6 @@ def main(win, width):
             if event.type == pygame.QUIT:
                 run = False
 
-            if started:
-                continue
-
             if pygame.mouse.get_pressed()[0]: # LEFT
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, ROWS, width)
@@ -372,41 +369,42 @@ def main(win, width):
                     end = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a and start and end:
+                if event.key == pygame.K_a and start and end and started == False:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
-
+                    started = True
                     Success, Count = astar(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
                     score = "Success: " + str(Success) + "  Count:" + str(Count)
 
-                elif event.key == pygame.K_d and start and end:
+                elif event.key == pygame.K_d and start and end and started == False:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
-
+                    started = True
                     Success, Count = dfs(lambda: draw(win, grid, ROWS, width, score), start, end)
                     score = "Success: " + str(Success) + "  Count:" + str(Count)
 
-                elif event.key == pygame.K_b and start and end:
+                elif event.key == pygame.K_b and start and end and started == False:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
-
+                    started = True
                     Success, Count = bfs(lambda: draw(win, grid, ROWS, width, score), start, end)
                     score = "Success: " + str(Success) + "  Count:" + str(Count)
 
-                elif event.key == pygame.K_u and start and end:
+                elif event.key == pygame.K_u and start and end and started == False:
                     for row in grid:
                         for node in row:
                             node.update_neighbours(grid)
-
+                    started = True
                     Success, Count = ucs(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
                     score = "Success: " + str(Success) + "  Count:" + str(Count)
 
-                if event.key == pygame.K_c:
+                if event.key == pygame.K_c and started:
                     start = None
                     end = None
+                    started = False
                     grid = make_grid(ROWS, width)
 
 
