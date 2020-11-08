@@ -334,7 +334,7 @@ def main(win, width):
 
     run = True
     started = False
-    score = "Success: False  Count: 0"
+    score = "Success: False | Score(Lower Is Better): 0"
 
 
     while run:
@@ -375,7 +375,7 @@ def main(win, width):
                             node.update_neighbours(grid)
                     started = True
                     Success, Count = astar(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
-                    score = "Success: " + str(Success) + "  Count:" + str(Count)
+                    score = "Success: " + str(Success) + " | Score(Lower Is Better):" + str(Count)
 
                 elif event.key == pygame.K_d and start and end and started == False:
                     for row in grid:
@@ -383,7 +383,7 @@ def main(win, width):
                             node.update_neighbours(grid)
                     started = True
                     Success, Count = dfs(lambda: draw(win, grid, ROWS, width, score), start, end)
-                    score = "Success: " + str(Success) + "  Count:" + str(Count)
+                    score = "Success: " + str(Success) + " | Score(Lower Is Better):" + str(Count)
 
                 elif event.key == pygame.K_b and start and end and started == False:
                     for row in grid:
@@ -391,7 +391,7 @@ def main(win, width):
                             node.update_neighbours(grid)
                     started = True
                     Success, Count = bfs(lambda: draw(win, grid, ROWS, width, score), start, end)
-                    score = "Success: " + str(Success) + "  Count:" + str(Count)
+                    score = "Success: " + str(Success) + " | Score(Lower Is Better):" + str(Count)
 
                 elif event.key == pygame.K_u and start and end and started == False:
                     for row in grid:
@@ -399,7 +399,7 @@ def main(win, width):
                             node.update_neighbours(grid)
                     started = True
                     Success, Count = ucs(lambda: draw(win, grid, ROWS, width, score), grid, start, end)
-                    score = "Success: " + str(Success) + "  Count:" + str(Count)
+                    score = "Success: " + str(Success) + " | Score(Lower Is Better):" + str(Count)
 
                 if event.key == pygame.K_c and started:
                     start = None
