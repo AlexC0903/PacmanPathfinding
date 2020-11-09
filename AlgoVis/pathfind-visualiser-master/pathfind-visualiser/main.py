@@ -12,11 +12,11 @@ from assets.dropdown import Dropdown
 BUTTON1 = (0, 0, 0)
 BUTTON2 = (255, 255, 255)
 BUTTON3 = (162, 162, 162)
-BG = (150, 150, 150)
+BG = (255, 255, 255)
 # Same as BG but change this for different frame colours
-BG2 = (150, 150, 150)
+BG2 = (0, 0, 0)
 OUTLINE_COLOUR = (0, 0, 0)
-TEXT_COLOUR = (0, 0, 0)
+TEXT_COLOUR = (255, 255, 255)
 
 # FONTS
 pygame.font.init()
