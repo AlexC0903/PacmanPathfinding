@@ -13,7 +13,6 @@ BUTTON1 = (255, 255, 255)
 BUTTON2 = (0, 0, 0)
 BUTTON3 = (162, 162, 162)
 BG = (255, 255, 255)
-# Same as BG but change this for different frame colours
 BG2 = (0, 0, 0)
 OUTLINE_COLOUR = (100, 100, 100)
 TEXT_COLOUR = (255, 255, 255)

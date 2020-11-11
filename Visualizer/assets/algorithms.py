@@ -106,6 +106,9 @@ def a_star_algorithm(draw, grid, start, end):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
 
         # Node with the lowest f score gets chosen first
         # thanks to the priority queue
