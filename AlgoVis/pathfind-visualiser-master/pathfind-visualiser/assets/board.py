@@ -1,13 +1,13 @@
 import pygame
 
 # COLOURS
-DEFAULT = (100, 100, 100)  # silver
-BARRIER = (0, 0, 0)  # black
-OPEN = (0, 100, 0)  # green
-END = (200, 0, 0)  # (0, 0, 255)  # blue
+DEFAULT = (255, 255, 255)  # white
+BARRIER = (50, 50, 50)  # grey
+OPEN = (0, 255, 0)  # green
+END = (36,233,255)  # aqua
 PATH = (255, 255, 0)  # yellow
-CLOSED = (128, 0, 128)  # purple
-START = (0, 0, 255)  # (255, 165, 0)  # orange
+CLOSED = (255, 0, 0)  # red
+START = (255,171,74)  # (255, 165, 0)  # orange
 GRIDLINES = (0, 0, 0)  # black
 
 
