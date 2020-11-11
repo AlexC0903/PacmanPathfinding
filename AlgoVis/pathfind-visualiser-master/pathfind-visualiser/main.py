@@ -9,13 +9,13 @@ from assets.buttons import Button
 from assets.dropdown import Dropdown
 
 # COLOURS
-BUTTON1 = (255, 255, 255)
-BUTTON2 = (0, 0, 0)
+BUTTON1 = (0, 0, 0)
+BUTTON2 = (255, 255, 255)
 BUTTON3 = (162, 162, 162)
 BG = (255, 255, 255)
 # Same as BG but change this for different frame colours
 BG2 = (0, 0, 0)
-OUTLINE_COLOUR = (100, 100, 100)
+OUTLINE_COLOUR = (0, 0, 0)
 TEXT_COLOUR = (255, 255, 255)
 
 # FONTS
@@ -76,14 +76,14 @@ def draw_instructions(window, size):
 
     # Instructions
     line1 = tiny_font.render(
-        "1. Look at the Controls and Color Key, which are on the right.", 1, TEXT_COLOUR
+        "1. Look over the controls and key on the right.", 1, TEXT_COLOUR
     )
 
     line2 = tiny_font.render(
-        "2. Choose which algorithm you would like to visualize", 1, TEXT_COLOUR
+        "2. Choose which pathfinding algorithm you would like to", 1, TEXT_COLOUR
     )
     line3 = tiny_font.render(
-        "    down below.", 1, TEXT_COLOUR
+        "     visualise down below. This will open another window.", 1, TEXT_COLOUR
     )
 
     line4 = tiny_font.render(
@@ -114,7 +114,7 @@ def draw_instructions(window, size):
     )
 
     line12 = tiny_font.render(
-        "You can try out different mazes and grid size.", 1, TEXT_COLOUR
+        "Don't forget to try out different row sizes and mazes too!", 1, TEXT_COLOUR
     )
 
     # LABEL PLACEMENT
@@ -329,6 +329,18 @@ def draw_buttons(window, size, rows, xpos, ypos, clicked, maze_type):
         text="Dijkstra's Algorithm",
     )
     buttons.append(dijkstra_button)
+    # Greedy best-first search algorithm
+    best_first_button = Button(
+        BUTTON1,
+        BUTTON2,
+        size // 20,
+        size * 37 // 40,
+        size * 7 // 16,
+        size // 15,
+        lambda: run_algorithms(window, size, rows, "best-first", maze_type),
+        text="Greedy Best-First Search",
+    )
+    buttons.append(best_first_button)
 
     # Loop through the buttons and execute their function if they are selected and the mouse has been clicked
     for button in buttons:
